@@ -3,21 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="mmIR: Frequency-Space Inverse Rendering for 3D Millimeter-Wave Radar ADC Synthesis. An open-source differentiable FMCW radar inverse renderer (ECCV 2026).">
+        content="mmIR: Frequency-Space Inverse Rendering for 3D Millimeter-Wave Radar ADC Synthesis (ECCV 2026).">
   <meta name="keywords" content="mmIR, differentiable rendering, FMCW radar, inverse rendering, mmWave, 3D reconstruction, ECCV 2026, ADC synthesis">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>mmIR: Frequency-Space Inverse Rendering for 3D Millimeter-Wave Radar ADC Synthesis</title>
 
   <!-- Open Graph / social preview -->
   <meta property="og:title" content="mmIR: Frequency-Space Inverse Rendering for 3D Millimeter-Wave Radar ADC Synthesis">
-  <meta property="og:description" content="An open-source differentiable FMCW radar inverse renderer that synthesizes high-resolution 3D radar data (ECCV 2026).">
+  <meta property="og:description" content="ECCV 2026. Cornell Tech.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="./static/images/teaser.png">
-  <meta property="og:url" content="https://mmir.github.io/">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:url" content="https://mmwave-inverse-rendering.github.io/">
+  <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="mmIR: Frequency-Space Inverse Rendering for 3D Millimeter-Wave Radar ADC Synthesis">
-  <meta name="twitter:description" content="An open-source differentiable FMCW radar inverse renderer that synthesizes high-resolution 3D radar data (ECCV 2026).">
-  <meta name="twitter:image" content="./static/images/teaser.png">
+  <meta name="twitter:description" content="ECCV 2026. Cornell Tech.">
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
@@ -33,8 +31,6 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
 
   <style>
     /* coming-soon / disabled button styling */
@@ -47,14 +43,13 @@
       pointer-events: none;
     }
     .button.is-coming-soon .icon { color: #ffffff; }
-    .teaser-figure img {
-      width: 100%;
-      height: auto;
-      border-radius: 6px;
-    }
     .publication-title { line-height: 1.15; }
     .orcid-link { color: #a6ce39; margin-left: 0.25rem; }
     .venue-badge { font-weight: 600; }
+    /* keep the minimal page from looking top-heavy */
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .main-content { flex: 1 0 auto; }
+    .footer { flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -79,6 +74,7 @@
 </nav>
 
 
+<div class="main-content">
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
@@ -112,13 +108,13 @@
                   <span>Paper (coming soon)</span>
                 </a>
               </span>
-              <!-- arXiv Link (coming soon) -->
+              <!-- Supplementary Link (coming soon) -->
               <span class="link-block">
                 <a class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
                   <span class="icon">
-                      <i class="ai ai-arxiv"></i>
+                      <i class="fas fa-file-archive"></i>
                   </span>
-                  <span>arXiv (coming soon)</span>
+                  <span>Supplementary (coming soon)</span>
                 </a>
               </span>
               <!-- Code Link (coming soon) -->
@@ -130,15 +126,6 @@
                   <span>Code (coming soon)</span>
                 </a>
               </span>
-              <!-- Supplementary Link (coming soon) -->
-              <span class="link-block">
-                <a class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
-                  <span class="icon">
-                      <i class="fas fa-file-archive"></i>
-                  </span>
-                  <span>Supplementary (coming soon)</span>
-                </a>
-              </span>
             </div>
           </div>
         </div>
@@ -146,78 +133,7 @@
     </div>
   </div>
 </section>
-
-
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <div class="teaser-figure">
-        <img src="./static/images/teaser.png"
-             alt="mmIR teaser: from a LiDAR mesh and ground-truth cascaded-radar range-azimuth map, mmIR fits per-vertex materials, normals, and beam patterns, then re-renders a dense 100x100 virtual array for single-frame 3D occupancy.">
-      </div>
-      <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
-        Given a LiDAR mesh and ground-truth real cascaded-radar range&ndash;azimuth (RA) map
-        (left), <span class="dnerf">mmIR</span> fits per-vertex materials, normals, and beam
-        patterns (center), then re-renders a dense 100&times;100 virtual array for single-frame
-        3D occupancy (right).
-      </h2>
-    </div>
-  </div>
-</section>
-
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <!-- Abstract. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            High-resolution 3D radar data is scarce. Commodity mmWave sensors use small antenna
-            arrays that limit angular resolution to several degrees, and existing datasets provide
-            only 2D range&ndash;azimuth maps or sparse point clouds rather than raw
-            analog-to-digital converter (ADC) signals. Hardware scaling is expensive,
-            synthetic-aperture scanning is impractical at fleet scale, and learned synthesis
-            methods are bottlenecked by the very data shortage they aim to address.
-          </p>
-          <p>
-            We present mmIR, an open-source differentiable frequency-modulated continuous-wave
-            (FMCW) radar inverse renderer that fits a physics-based forward model to real captures
-            and re-renders from dense virtual apertures to synthesize high-resolution 3D radar
-            data. Because radar resolution is too coarse to recover geometry directly, mmIR
-            performs LiDAR-assisted inverse rendering: using LiDAR-derived meshes as a geometric
-            scaffold, mmIR optimizes per-vertex International Telecommunication Union (ITU) physics
-            materials, vertex normals, and antenna beam patterns through end-to-end automatic
-            differentiation of a phase-coherent multiple-input multiple-output (MIMO) forward model
-            with multi-bounce propagation, polarization, and free-space diffraction.
-          </p>
-          <p>
-            On seven outdoor and six indoor ColoRadar scenes, mmIR achieves 0.914 mean Pearson
-            correlation on range&ndash;azimuth maps versus 0.307 for Sionna-RT. Scenes trained on a
-            cascaded imaging radar transfer to a co-located single-chip radar without re-training
-            (0.554 correlation), and dense virtual arrays (100&times;100 elements) produce
-            single-frame 3D occupancy validated against LiDAR.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!--/ Abstract. -->
-  </div>
-</section>
-
-
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@inproceedings{armouti2026mmir,
-  author    = {Armouti, Adnan and Gao, Yixuan and Nandakumar, Rajalakshmi},
-  title     = {mmIR: Frequency-Space Inverse Rendering for 3D Millimeter-Wave Radar ADC Synthesis},
-  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
-  year      = {2026},
-}</code></pre>
-  </div>
-</section>
+</div>
 
 
 <footer class="footer">
@@ -225,15 +141,17 @@
     <div class="columns is-centered">
       <div class="column is-8">
         <div class="content has-text-centered">
-          <p>
-            &copy; 2026 Adnan Armouti, Yixuan Gao, Rajalakshmi Nandakumar &mdash;
-            Cornell Tech, New York, NY, USA.
+          <p><strong>mmIR</strong> &mdash; Cornell Tech, New York, NY, USA.</p>
+          <p style="font-size: 0.85rem;">
+            Copyright &copy; 2025&ndash;2026 Cornell University. All Rights Reserved.
+            Use of &ldquo;mmIR&rdquo; and &ldquo;3DPS&rdquo; is permitted for educational,
+            research, and non-profit purposes under the
+            <a href="./LICENSE">Cornell University license</a> (CTL docket 12012).
+            For commercial use, contact Cornell&rsquo;s Center for Technology Licensing
+            (<a href="mailto:ctl-connect@cornell.edu">ctl-connect@cornell.edu</a>).
           </p>
-          <p>
-            This website is licensed under a <a rel="license"
-              href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons
-              Attribution-ShareAlike 4.0 International License</a>.
-            The template is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          <p style="font-size: 0.8rem;">
+            Page template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
           </p>
         </div>
       </div>
@@ -242,7 +160,7 @@
 </footer>
 
 <script>
-  // Mobile navbar burger toggle (carousel JS not needed: static teaser image).
+  // Mobile navbar burger toggle.
   document.addEventListener('DOMContentLoaded', function () {
     var burgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
     burgers.forEach(function (el) {
