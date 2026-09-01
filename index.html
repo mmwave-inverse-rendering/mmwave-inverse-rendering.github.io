@@ -29,26 +29,131 @@
   <script defer src="./static/js/fontawesome.all.min.js"></script>
 
   <style>
-    .button.is-coming-soon {
-      background-color: #6b7280;
-      border-color: #6b7280;
-      color: #ffffff;
-      cursor: not-allowed;
-      opacity: 0.65;
-      pointer-events: none;
+    :root, :root[data-theme="light"] {
+      --bg: #ffffff;
+      --fg: #1f2024;
+      --muted: #5b5c63;
+      --card-bg: #f5f5f7;
+      --media-dark: #26272c;   /* matches the slide tile background */
+      --tile-bg: #f5f5f7;      /* adaptive tile cards (light assets baked on this) */
+      --acc-in: #0d7fc0;       /* overview caption accents, per theme */
+      --acc-fw: #d97406;
+      --acc-out: #2f9e44;
+      --link: #3273dc;
+      --toggle-border: #dcdce0;
     }
-    .button.is-coming-soon .icon { color: #ffffff; }
+    :root[data-theme="dark"] {
+      --bg: #16171b;
+      --fg: #e8e8ec;
+      --muted: #a0a1a8;
+      --card-bg: #1e1f24;
+      --media-dark: #26272c;
+      --tile-bg: #26272c;
+      --acc-in: #40c8ff;
+      --acc-fw: #ff9e28;
+      --acc-out: #8ceb8c;
+      --link: #7fb0ff;
+      --toggle-border: #34353c;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --bg: #16171b; --fg: #e8e8ec; --muted: #a0a1a8;
+        --card-bg: #1e1f24; --media-dark: #26272c; --tile-bg: #26272c;
+        --acc-in: #40c8ff; --acc-fw: #ff9e28; --acc-out: #8ceb8c;
+        --link: #7fb0ff; --toggle-border: #34353c;
+      }
+    }
+
+    html, body { background-color: var(--bg); }
+    body { color: var(--fg); display: flex; flex-direction: column; min-height: 100vh; }
+    .main-content { flex: 1 0 auto; }
+    .footer { flex-shrink: 0; background-color: var(--bg); }
+    .hero { background-color: var(--bg); }
+
+    .title, .publication-title, .section-title { color: var(--fg) !important; }
+    .publication-authors, .venue-badge, .author-block { color: var(--fg); }
+    a { color: var(--link); }
+    .caption { color: var(--muted); font-size: 0.95rem; margin-top: 0.85rem; }
     .publication-title { line-height: 1.15; }
     .orcid-link { color: #a6ce39; margin-left: 0.25rem; }
     .venue-badge { font-weight: 600; }
-    body { display: flex; flex-direction: column; min-height: 100vh; }
-    .main-content { flex: 1 0 auto; }
-    .footer { flex-shrink: 0; }
+
+    .button.is-coming-soon {
+      background-color: #6b7280; border-color: #6b7280; color: #fff;
+      cursor: not-allowed; opacity: 0.65; pointer-events: none;
+    }
+    .button.is-coming-soon .icon { color: #fff; }
+
+    .section-title { text-align: center; margin-bottom: 1.75rem; }
+    .section-desc { max-width: 760px; margin: 0 auto 1.5rem; text-align: justify; color: var(--fg); font-size: 1rem; line-height: 1.6; }
+    .section-desc.wide { max-width: none; }
+
+    /* grey abstract box (matches the metricscenes reference; no blue divider line) */
+    .abstract-box { background: var(--card-bg); border-radius: 12px; padding: 1.5rem 1.75rem 1.25rem; }
+    .abstract-box .section-title { margin-bottom: 1rem; }
+    .abstract-box .section-desc { margin-bottom: 0; }
+
+    /* keep all publication buttons on one line */
+    .publication-links { display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+    .publication-links .link-block { margin: 0; }
+    @media (max-width: 640px) { .publication-links { flex-wrap: wrap; } }
+
+    /* cards — no boundary outlines */
+    .card-adaptive { background: var(--card-bg); border-radius: 10px; padding: 0.9rem; }
+    .card-dark { background: var(--media-dark); border-radius: 10px; padding: 0.9rem; }
+    .card-tile { background: var(--tile-bg); border-radius: 10px; padding: 0.9rem; }
+    .card-adaptive img, .card-dark img, .card-dark video, .card-tile img, .card-tile video,
+    .figure img, .figure video {
+      width: 100%; height: auto; display: block; border-radius: 6px;
+    }
+
+    /* method overview: the four forward-model tiles from the A-exam deck
+       (slide #12, "mmIR Overview: The Forward Model") on theme-adaptive cards */
+    .ov-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .ov-card { background: var(--tile-bg); border-radius: 10px; padding: 0.6rem; display: flex; flex-direction: column; }
+    .ov-media { flex: 1; aspect-ratio: 3 / 4; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .ov-media img, .ov-media video { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; }
+    /* input tiles: three stacked sub-images, each with its own small label */
+    .ov-stack { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; gap: 0.4rem; }
+    .ov-sub img { width: 100%; height: auto; display: block; border-radius: 4px; }
+    .ov-sub .sl { text-align: center; font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+    .ov-label { text-align: center; margin-top: 0.55rem; font-size: 0.86rem; color: var(--muted); }
+    .ov-label .n { font-weight: 700; color: var(--fg); }
+    /* caption accents matching the slide: inputs blue, method amber, output green */
+    .ov-label .cap-in { color: var(--acc-in); font-weight: 600; }
+    .ov-label .cap-fw { color: var(--acc-fw); font-weight: 600; }
+    .ov-label .cap-out { color: var(--acc-out); font-weight: 600; }
+    @media (max-width: 820px) { .ov-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 440px) { .ov-grid { grid-template-columns: 1fr; } }
+
+    /* training viz */
+    .train-wrap { max-width: 760px; margin: 0 auto; }
+    .train-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .train-panel .ptitle { text-align: center; font-weight: 600; margin-bottom: 0.5rem; color: var(--fg); }
+    .train-panel img { width: 100%; height: auto; display: block; border-radius: 6px; }
+    .train-status { text-align: center; margin-top: 1rem; font-variant-numeric: tabular-nums; color: var(--fg); font-size: 1.05rem; }
+    .train-status .k { color: var(--muted); }
+    @media (max-width: 520px) { .train-panels { grid-template-columns: 1fr; } }
+
+    /* theme toggle */
+    #theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 30;
+      width: 2.6rem; height: 2.6rem; border-radius: 50%;
+      background: var(--card-bg); border: 1px solid var(--toggle-border);
+      color: var(--fg); cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #theme-toggle:hover { filter: brightness(1.08); }
   </style>
 </head>
 <body>
 
+<button id="theme-toggle" aria-label="Toggle light and dark theme" title="Toggle light/dark">
+  <i id="theme-icon" class="fas fa-moon"></i>
+</button>
+
 <div class="main-content">
+
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
@@ -60,11 +165,11 @@
           </div>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              Adnan Armouti<sup>1</sup><a class="orcid-link" href="https://orcid.org/0000-0002-4448-3089" target="_blank" rel="noopener"><i class="ai ai-orcid"></i></a>,</span>
+              <a href="https://adnan-armouti.github.io/" target="_blank" rel="noopener">Adnan Armouti</a><sup>1</sup><a class="orcid-link" href="https://orcid.org/0000-0002-4448-3089" target="_blank" rel="noopener"><i class="ai ai-orcid"></i></a>,</span>
             <span class="author-block">
-              Yixuan Gao<sup>1</sup><a class="orcid-link" href="https://orcid.org/0000-0003-1778-3104" target="_blank" rel="noopener"><i class="ai ai-orcid"></i></a>,</span>
+              <a href="https://adamgao1996.github.io" target="_blank" rel="noopener">Yixuan Gao</a><sup>1</sup><a class="orcid-link" href="https://orcid.org/0000-0003-1778-3104" target="_blank" rel="noopener"><i class="ai ai-orcid"></i></a>,</span>
             <span class="author-block">
-              Rajalakshmi Nandakumar<sup>1</sup><a class="orcid-link" href="https://orcid.org/0000-0002-1601-148X" target="_blank" rel="noopener"><i class="ai ai-orcid"></i></a></span>
+              <a href="https://infosci.cornell.edu/~rajalakshmi/" target="_blank" rel="noopener">Rajalakshmi Nandakumar</a><sup>1</sup><a class="orcid-link" href="https://orcid.org/0000-0002-1601-148X" target="_blank" rel="noopener"><i class="ai ai-orcid"></i></a></span>
           </div>
 
           <div class="is-size-5 publication-authors">
@@ -74,27 +179,33 @@
           <div class="column has-text-centered">
             <div class="publication-links">
               <span class="link-block">
-                <a class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
-                  <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper (coming soon)</span>
+                <a href="https://arxiv.org/abs/2608.28913" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
                 </a>
               </span>
               <span class="link-block">
                 <a class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
-                  <span class="icon">
-                      <i class="fas fa-file-archive"></i>
-                  </span>
-                  <span>Supplementary (coming soon)</span>
+                  <span class="icon"><i class="fas fa-file-archive"></i></span>
+                  <span>Supplementary</span>
                 </a>
               </span>
               <span class="link-block">
                 <a class="button is-normal is-rounded is-coming-soon" aria-disabled="true" tabindex="-1">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code (coming soon)</span>
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=UjcEwDx3bns" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-youtube"></i></span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://drive.google.com/file/d/1E5c7vM5N7udhou3jiCmoKmwWtcAGs6Rg/view?usp=sharing" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-image"></i></span>
+                  <span>Poster</span>
                 </a>
               </span>
             </div>
@@ -104,6 +215,187 @@
     </div>
   </div>
 </section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="figure">
+      <img class="themed" data-light="./static/images/teaser_light.png?v=3"
+           data-dark="./static/images/teaser_dark.png?v=3" src="./static/images/teaser_light.png?v=3"
+           alt="mmIR teaser: from a LiDAR mesh and ground-truth cascaded-radar range-azimuth map, mmIR fits per-vertex materials, normals, and beam patterns, then re-renders a dense 100x100 virtual array for single-frame 3D occupancy.">
+    </div>
+    <p class="caption has-text-centered">
+      Given a LiDAR mesh and ground-truth real cascaded-radar range&ndash;azimuth (RA) map,
+      mmIR fits per-vertex materials, normals, and beam patterns, then re-renders a dense
+      100&times;100 virtual array for single-frame 3D occupancy.
+    </p>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="abstract-box">
+    <h2 class="title is-3 section-title">Abstract</h2>
+    <p class="section-desc">
+      High-resolution 3D radar data is scarce. Commodity mmWave sensors use small antenna arrays that limit
+      angular resolution to several degrees, and existing datasets provide only 2D range&ndash;azimuth maps or
+      sparse point clouds rather than raw analog-to-digital converter (ADC) signals. Hardware scaling is
+      expensive, synthetic-aperture scanning is impractical at fleet scale, and learned synthesis methods are
+      bottlenecked by the very data shortage they aim to address. We present mmIR, an open-source differentiable
+      frequency-modulated continuous-wave (FMCW) radar inverse renderer that fits a physics-based forward model
+      to real captures and re-renders from dense virtual apertures to synthesize high-resolution 3D radar data.
+      Because radar resolution is too coarse to recover geometry directly, mmIR performs LiDAR-assisted inverse
+      rendering: using LiDAR-derived meshes as a geometric scaffold, mmIR optimizes per-vertex International
+      Telecommunication Union (ITU) physics materials, vertex normals, and antenna beam patterns through
+      end-to-end automatic differentiation of a phase-coherent multiple-input multiple-output (MIMO) forward
+      model with multi-bounce propagation, polarization, and free-space diffraction. On seven outdoor and six
+      indoor ColoRadar scenes, mmIR achieves 0.914 mean Pearson correlation on range&ndash;azimuth maps versus
+      0.307 for Sionna-RT. Scenes trained on a cascaded imaging radar transfer to a co-located single-chip radar
+      without re-training (0.554 correlation), and dense virtual arrays (100&times;100 elements) produce
+      single-frame 3D occupancy validated against LiDAR.
+    </p>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">Method Overview: The Forward Model</h2>
+    <p class="section-desc wide">mmIR optimizes explicit, independent representations of the scene and radar. A LiDAR mesh with per-vertex materials and normals describes the scene. The radar is described by its pose, measured beam patterns, and array layout. A differentiable ray tracer traces multi-bounce paths between them and sums their phase-delayed chirps into raw FMCW ADC samples.</p>
+    <div class="ov-grid">
+      <div class="ov-card">
+        <div class="ov-stack">
+          <div class="ov-sub">
+            <img class="themed" data-light="./static/images/ov_scene_geometry_light.png"
+                 data-dark="./static/images/ov_scene_geometry_dark.png"
+                 src="./static/images/ov_scene_geometry_light.png" alt="LiDAR geometry of the scene">
+            <div class="sl">LiDAR geometry</div>
+          </div>
+          <div class="ov-sub">
+            <img class="themed" data-light="./static/images/ov_scene_normals_light.png"
+                 data-dark="./static/images/ov_scene_normals_dark.png"
+                 src="./static/images/ov_scene_normals_light.png" alt="Per-vertex normals of the scene">
+            <div class="sl">normals</div>
+          </div>
+          <div class="ov-sub">
+            <img class="themed" data-light="./static/images/ov_scene_materials_light.png"
+                 data-dark="./static/images/ov_scene_materials_dark.png"
+                 src="./static/images/ov_scene_materials_light.png" alt="Per-vertex materials of the scene">
+            <div class="sl">materials</div>
+          </div>
+        </div>
+        <div class="ov-label"><span class="cap-in">Input: Scene Representation</span></div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-stack">
+          <div class="ov-sub">
+            <img class="themed" data-light="./static/images/ov_radar_pose_light.png"
+                 data-dark="./static/images/ov_radar_pose_dark.png"
+                 src="./static/images/ov_radar_pose_light.png" alt="Radar pose in the scene">
+            <div class="sl">radar pose</div>
+          </div>
+          <div class="ov-sub">
+            <img class="themed" data-light="./static/images/ov_radar_beams_light.png"
+                 data-dark="./static/images/ov_radar_beams_dark.png"
+                 src="./static/images/ov_radar_beams_light.png" alt="Measured Tx and Rx beam patterns">
+            <div class="sl">beam patterns</div>
+          </div>
+          <div class="ov-sub">
+            <img class="themed" data-light="./static/images/ov_array_cascade_light.png"
+                 data-dark="./static/images/ov_array_cascade_dark.png"
+                 src="./static/images/ov_array_cascade_light.png"
+                 alt="Cascaded-radar array configuration (12 TX, 16 RX, 136 virtual)">
+            <div class="sl">array configuration</div>
+          </div>
+        </div>
+        <div class="ov-label"><span class="cap-in">Input: Radar Representation</span></div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-media">
+          <img class="themed" data-light="./static/videos/raytrace_light.webp?v=2"
+               data-dark="./static/videos/raytrace_dark.webp?v=2"
+               src="./static/videos/raytrace_light.webp?v=2"
+               alt="Ray-tracing forward model over the scene mesh">
+        </div>
+        <div class="ov-label"><span class="cap-fw">Method: Ray-Tracing Forward Model</span></div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-media">
+          <img class="themed" data-light="./static/images/ov_adc_tile_light.png"
+               data-dark="./static/images/ov_adc_tile_dark.png"
+               src="./static/images/ov_adc_tile_light.png" alt="Raw ADC waveforms rendered by the forward model">
+        </div>
+        <div class="ov-label"><span class="cap-out">Output: Raw ADC Waveforms</span></div>
+      </div>
+    </div>
+    <p class="caption has-text-centered">
+      The forward model traces phase-coherent multi-bounce paths for every TX&ndash;RX pair and synthesizes raw
+      FMCW ADC from the independent, explicit scene and sensor representations. Automatic differentiation
+      through ray tracing, BSDF, phasor accumulation, and ADC enables joint optimization of materials, normals,
+      and beam patterns.
+    </p>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">Training</h2>
+    <p class="section-desc">The forward model runs inside a single computation graph. Gradients flow from a range-azimuth loss back through the ADC, the phasors, the BSDF, and the ray intersections to every learnable parameter. Below, we show one scene&rsquo;s rendered map converging toward the real GT.</p>
+    <div class="train-wrap">
+      <div class="train-panels">
+        <div class="train-panel">
+          <div class="ptitle">GT</div>
+          <img src="./static/images/training/gt.png" alt="Ground-truth range-azimuth map">
+        </div>
+        <div class="train-panel">
+          <div class="ptitle">Rendered</div>
+          <img id="train-rendered" src="./static/images/training/iter_0010.png" alt="Rendered range-azimuth map during training">
+        </div>
+      </div>
+      <div class="train-status">
+        <span class="k">Iteration:</span> <span id="train-iter">10</span><span class="k">&thinsp;/&thinsp;500</span>
+        &nbsp;&nbsp;<span class="k">Correlation:</span> <span id="train-corr">0.802</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">Results</h2>
+    <p class="section-desc wide">Across seven outdoor ColoRadar scenes, mmIR reaches a mean correlation of 0.919 against real GT range-azimuth maps while Sionna-RT reaches 0.324. mmIR recovers the dominant scatterers and resolves both range and azimuth dimensions.</p>
+    <div class="figure">
+      <img class="themed" data-light="./static/images/result_ra_outdoor_light.png?v=2"
+           data-dark="./static/images/result_ra_outdoor_dark.png?v=2"
+           src="./static/images/result_ra_outdoor_light.png?v=2"
+           alt="Rendered vs measured range-azimuth maps across outdoor scenes">
+    </div>
+    <p class="caption has-text-centered">
+      Rendered vs. measured range&ndash;azimuth maps across outdoor scenes.
+    </p>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 section-title">3D Re-Renders Across Scenes</h2>
+    <p class="section-desc wide">Because the scene and sensor representations are independent and explicit, the fitted scene can be frozen and re-rendered by a different radar, while consistent with the scene geometry and radar physics. A 100 &times; 100 virtual array resolves elevation as well as azimuth, so a single frame yields a high-resolution 3D point cloud with true elevation (top row). The real cascaded radar&rsquo;s aperture spans azimuth alone, so it smears detections vertically (bottom row).</p>
+    <div class="figure">
+      <video class="themed" data-light="./static/videos/gallery3d_light.mp4?v=2"
+             data-dark="./static/videos/gallery3d_dark.mp4?v=2"
+             autoplay muted loop playsinline></video>
+    </div>
+    <p class="caption has-text-centered">
+      Dense 100&times;100 virtual arrays produce single-frame 3D occupancy across a range of scenes.
+    </p>
+  </div>
+</section>
+
 </div>
 
 
@@ -112,7 +404,7 @@
     <div class="columns is-centered">
       <div class="column is-8">
         <div class="content has-text-centered">
-          <p style="font-size: 0.85rem;">
+          <p style="font-size: 0.85rem; color: var(--muted);">
             Copyright &copy; 2025&ndash;2026 Cornell University. All Rights Reserved.
             Use of &ldquo;mmIR&rdquo; is permitted for educational,
             research, and non-profit purposes under the
@@ -120,7 +412,7 @@
             For commercial use, contact Cornell&rsquo;s Center for Technology Licensing
             (<a href="mailto:ctl-connect@cornell.edu">ctl-connect@cornell.edu</a>).
           </p>
-          <p style="font-size: 0.8rem;">
+          <p style="font-size: 0.8rem; color: var(--muted);">
             Page template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
           </p>
         </div>
@@ -128,6 +420,81 @@
     </div>
   </div>
 </footer>
+
+<script>
+  // Light/dark theme toggle (overrides OS; persists per viewer).
+  // Every element with class "themed" declares data-light / data-dark
+  // sources; apply() swaps them all (images and videos alike).
+  (function () {
+    var root = document.documentElement;
+    var KEY = 'mmir-theme';
+    var btn = document.getElementById('theme-toggle');
+    var icon = document.getElementById('theme-icon');
+    function osDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+    function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+    function apply(t) {
+      root.setAttribute('data-theme', t);
+      if (icon) icon.className = (t === 'dark') ? 'fas fa-sun' : 'fas fa-moon';
+      document.querySelectorAll('.themed').forEach(function (el) {
+        var src = el.getAttribute('data-' + t);
+        if (!src || el.getAttribute('src') === src) return;
+        if (el.tagName === 'VIDEO') {
+          var pos = el.currentTime;
+          el.setAttribute('src', src);
+          el.load();
+          el.addEventListener('loadedmetadata', function seek() {
+            el.removeEventListener('loadedmetadata', seek);
+            if (pos && isFinite(el.duration)) el.currentTime = pos % el.duration;
+            el.play().catch(function () {});
+          });
+        } else {
+          el.setAttribute('src', src);
+        }
+      });
+    }
+    window.mmirTheme = function () { return root.getAttribute('data-theme') || 'light'; };
+    apply(stored() || (osDark() ? 'dark' : 'light'));
+    if (btn) btn.addEventListener('click', function () {
+      var next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      apply(next);
+    });
+    if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+      if (!stored()) apply(osDark() ? 'dark' : 'light');
+    });
+  })();
+
+  // Training animation: swap the rendered RA frame + update iteration/correlation.
+  // The RA maps keep their dark 'hot' colour scheme in both themes (dark is
+  // data there); only the card behind them adapts. Holds on the final
+  // 500/500 frame before looping.
+  (function () {
+    var pad = function (n) { return String(n).padStart(4, '0'); };
+    var FRAME_MS = 180, END_HOLD_MS = 2400;
+    var imgEl = document.getElementById('train-rendered');
+    var itEl = document.getElementById('train-iter');
+    var corrEl = document.getElementById('train-corr');
+    if (!imgEl) return;
+    var framePath = function (it) { return './static/images/training/iter_' + pad(it) + '.png'; };
+    fetch('./static/images/training/frames.json')
+      .then(function (r) { return r.json(); })
+      .then(function (frames) {
+        if (!frames || !frames.length) return;
+        frames.forEach(function (f) { var im = new Image(); im.src = framePath(f.it); });
+        var i = 0;
+        (function tick() {
+          var f = frames[i];
+          imgEl.src = framePath(f.it);
+          itEl.textContent = f.it;
+          corrEl.textContent = f.corr.toFixed(3);
+          var last = (i === frames.length - 1);
+          i = (i + 1) % frames.length;
+          setTimeout(tick, last ? END_HOLD_MS : FRAME_MS);
+        })();
+      })
+      .catch(function () {});
+  })();
+</script>
 
 </body>
 </html>
