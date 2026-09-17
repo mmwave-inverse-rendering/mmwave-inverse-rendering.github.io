@@ -179,7 +179,7 @@
           <div class="column has-text-centered">
             <div class="publication-links">
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2608.28913" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                <a href="https://doi.org/10.1007/978-3-032-37359-5_9" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
                   <span class="icon"><i class="fas fa-file-pdf"></i></span>
                   <span>Paper</span>
                 </a>
@@ -314,10 +314,11 @@
       </div>
       <div class="ov-card">
         <div class="ov-media">
-          <img class="themed" data-light="./static/videos/raytrace_light.webp?v=2"
-               data-dark="./static/videos/raytrace_dark.webp?v=2"
-               src="./static/videos/raytrace_light.webp?v=2"
-               alt="Ray-tracing forward model over the scene mesh">
+          <video class="themed" data-light="./static/videos/raytrace_light.mp4?v=4"
+                 data-dark="./static/videos/raytrace_dark.mp4?v=4"
+                 src="./static/videos/raytrace_light.mp4?v=4"
+                 autoplay muted loop playsinline webkit-playsinline preload="auto"
+                 aria-label="Ray-tracing forward model over the scene mesh"></video>
         </div>
         <div class="ov-label"><span class="cap-fw">Method: Ray-Tracing Forward Model</span></div>
       </div>
@@ -386,9 +387,10 @@
     <h2 class="title is-3 section-title">3D Re-Renders Across Scenes</h2>
     <p class="section-desc wide">Because the scene and sensor representations are independent and explicit, the fitted scene can be frozen and re-rendered by a different radar, while consistent with the scene geometry and radar physics. A 100 &times; 100 virtual array resolves elevation as well as azimuth, so a single frame yields a high-resolution 3D point cloud with true elevation (top row). The real cascaded radar&rsquo;s aperture spans azimuth alone, so it smears detections vertically (bottom row).</p>
     <div class="figure">
-      <video class="themed" data-light="./static/videos/gallery3d_light.mp4?v=2"
-             data-dark="./static/videos/gallery3d_dark.mp4?v=2"
-             autoplay muted loop playsinline></video>
+      <video class="themed" data-light="./static/videos/gallery3d_light.mp4?v=3"
+             data-dark="./static/videos/gallery3d_dark.mp4?v=3"
+             src="./static/videos/gallery3d_light.mp4?v=3"
+             autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
     </div>
     <p class="caption has-text-centered">
       Dense 100&times;100 virtual arrays produce single-frame 3D occupancy across a range of scenes.
