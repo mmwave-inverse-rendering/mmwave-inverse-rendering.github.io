@@ -84,14 +84,21 @@
     }
     .button.is-coming-soon .icon { color: #fff; }
 
-    .section-title { text-align: center; margin-bottom: 1.75rem; }
+    /* Bulma's .section is 3rem top AND bottom, so adjacent sections sat
+       ~100px apart. Trim only the vertical padding (the shorthand would
+       also drop the responsive side padding). Matches the 3dps page. */
+    .section { padding-top: 1.7rem; padding-bottom: 1.7rem; }
+    /* the hero carries its own 3rem, so hero -> first section was the one
+       gap the .section rule could not reach */
+    .hero-body { padding-bottom: 1.5rem; }
+    .section-title { text-align: center; margin-bottom: 1.4rem; }
     .section-desc { max-width: 760px; margin: 0 auto 1.5rem; text-align: justify; color: var(--fg); font-size: 1rem; line-height: 1.6; }
     .section-desc.wide { max-width: none; }
 
     /* grey abstract box (matches the metricscenes reference; no blue divider line) */
     .abstract-box { background: var(--card-bg); border-radius: 12px; padding: 1.5rem 1.75rem 1.25rem; }
     .abstract-box .section-title { margin-bottom: 1rem; }
-    .abstract-box .section-desc { margin-bottom: 0; }
+    .abstract-box .section-desc { margin-bottom: 0; max-width: none; }
 
     /* keep all publication buttons on one line */
     .publication-links { display: flex; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
