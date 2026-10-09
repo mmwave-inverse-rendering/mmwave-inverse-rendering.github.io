@@ -451,6 +451,11 @@
           var pos = el.currentTime;
           el.setAttribute('src', src);
           el.load();
+          // iOS Safari fetches nothing (not even metadata) until play() is
+          // called, so the metadata callback below never ran there and the
+          // clip sat on its play button. A muted inline play() is allowed
+          // without a gesture: ask right away.
+          if (el.hasAttribute('autoplay')) el.play().catch(function () {});
           el.addEventListener('loadedmetadata', function seek() {
             el.removeEventListener('loadedmetadata', seek);
             if (pos && isFinite(el.duration)) el.currentTime = pos % el.duration;
@@ -462,6 +467,22 @@
       });
     }
     window.mmirTheme = function () { return root.getAttribute('data-theme') || 'light'; };
+    // Mobile fallbacks: iOS pauses or never starts autoplay clips that are
+    // off screen, and Low Power Mode blocks autoplay until a gesture. Nudge
+    // every autoplay clip as it enters the viewport, and once on first touch.
+    (function () {
+      var clips = Array.prototype.slice.call(document.querySelectorAll('video[autoplay]'));
+      function nudge(v) { if (v.paused) v.play().catch(function () {}); }
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) nudge(e.target); });
+        }, { threshold: 0.1 });
+        clips.forEach(function (v) { io.observe(v); });
+      }
+      var unlock = function () { clips.forEach(nudge); };
+      document.addEventListener('touchend', unlock, { once: true, passive: true });
+      document.addEventListener('pointerdown', unlock, { once: true, passive: true });
+    })();
     apply(stored() || (osDark() ? 'dark' : 'light'));
     if (btn) btn.addEventListener('click', function () {
       var next = (root.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
